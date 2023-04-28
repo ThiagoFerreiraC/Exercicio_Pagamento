@@ -2,7 +2,11 @@ package br.com.sinqia;
 
 import br.com.sinqia.cargos.*;
 import br.com.sinqia.exceptions.*;
+import br.com.sinqia.geradores.AliquotaGeradorDeDados;
+import br.com.sinqia.geradores.FuncionarioGeradorDeDados;
+import br.com.sinqia.geradores.GeradorDeDados;
 import br.com.sinqia.repositories.*;
+import br.com.sinqia.validadores.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,7 +18,6 @@ public class Pagamento {
     public static void main(String[] args) {
         Pagamento pagamento = new Pagamento();
 
-
         //--------Funcionários -------
         Repository<Funcionario> funcionarioRepository = new FuncionarioRepository();
         pagamento.gerarDados(new FuncionarioGeradorDeDados(funcionarioRepository));
@@ -25,58 +28,47 @@ public class Pagamento {
         pagamento.gerarDados(new AliquotaGeradorDeDados(aliquotaRepository));
         List<Aliquota> aliquotas = pagamento.findAll(aliquotaRepository);
 
-        FolhaDePagamento folhaDePagamento = pagamento.gerarFolhaDePagamento(aliquotas);
+        CalculadoraIRRF calculadoraIRRF = pagamento.gerarCalculadoraIRRF(aliquotas);
 
-        Map<String, BigDecimal> nomeFuncionarioESalarioProcessadoMapa = pagamento.processarSalarioFuncionario(funcionarios, folhaDePagamento);
+        ProcessarPagamento processarPagamento = pagamento.gerarProcessadorDePagamento(calculadoraIRRF);
+
+        Map<String, BigDecimal> nomeFuncionarioESalarioProcessadoMapa = processarPagamento.processarSalarioFuncionario(funcionarios);
 
         List<String> nomeESalarioProcessados = pagamento.gerarListaDeNomeESalarioProcessadoFuncionario(nomeFuncionarioESalarioProcessadoMapa);
 
         nomeESalarioProcessados.forEach(System.out::println);
     }
 
-
-    public <T> void gerarDados(GeradorDeDados<T> geradorDeDados) {
+    public void gerarDados(GeradorDeDados geradorDeDados) {
         if (geradorDeDados == null) {
             throw new GeradorDeDadosNotFoundException("Gerador de dados não encontrado");
         }
         geradorDeDados.gerarDados();
     }
 
-    public <T> List<T> findAll(Repository<T> repository) {
+    public <T> List<T> findAll(Repository repository) {
         if (repository == null) {
             throw new RepositoryNotFoundException("Repositório não encontrado");
         }
         return repository.findAll();
     }
 
-    public FolhaDePagamento gerarFolhaDePagamento(List<Aliquota> aliquotas) {
-        if (aliquotas == null || aliquotas.isEmpty()) {
-            throw new AliquotasNullException("Alíquotas não encontradas");
-        }
-        return new FolhaDePagamento(aliquotas);
+    public CalculadoraIRRF gerarCalculadoraIRRF(List<Aliquota> aliquotas) {
+        ValidadorAliquotas validadorAliquotas = new ValidarListaDeAliquotas();
+        validadorAliquotas.validar(aliquotas);
+        return new CalculadoraIRRF(aliquotas, new ValidarValoresDasAliquotas());
     }
 
-    public Map<String, BigDecimal> processarSalarioFuncionario(List<Funcionario> funcionarios, FolhaDePagamento folhaDePagamento) {
-        if (funcionarios == null || funcionarios.isEmpty()) {
-            throw new FuncionariosNullException("Funcionários não encontrados");
+    public ProcessarPagamento gerarProcessadorDePagamento(CalculadoraIRRF calculadoraIRRF) {
+        if (calculadoraIRRF == null) {
+            throw new AliquotasNullException("Alíquotas não encontradas");
+            //TODO Trocar Exception
         }
-
-        if (folhaDePagamento == null) {
-            throw new FolhaDePagamentoNullException("Folha de pagamento não gerada");
-        }
-
-        if (funcionarios.stream().anyMatch(funcionario ->
-                funcionario == null || funcionario.getNome() == null || funcionario.getNome().isBlank())) {
-            throw new FuncionarioNotFoundException();
-            //TODO passar todas as mensagens para dentro das exceptions
-        }
-
-        return funcionarios
-                .stream()
-                .collect(Collectors.toMap(
-                        Funcionario::getNome,
-                        folhaDePagamento::processarSalario
-                ));
+        return new ProcessarPagamento(calculadoraIRRF,
+                List.of(new ValidadorListaDeFuncionarios(),
+                        new ValidadorDeEntidadeFuncionario(),
+                        new ValidadorNomeFuncionarios(),
+                        new ValidadorSalarioFuncionarios()));
     }
 
     public List<String> gerarListaDeNomeESalarioProcessadoFuncionario(Map<String, BigDecimal> nomeFuncionarioESalarioProcessadoMapa) {
@@ -87,7 +79,5 @@ public class Pagamento {
                         + " = "
                         + mapa.getValue())
                 .collect(Collectors.toList());
-        //TODO formatar a exibição do valor, trocar testes
-        //TODO test
     }
 }

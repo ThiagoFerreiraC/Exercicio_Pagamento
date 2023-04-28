@@ -6,9 +6,9 @@ import br.com.sinqia.cargos.Funcionario;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FuncionarioRepository implements Repository {
+public class FuncionarioRepository implements Repository<Funcionario> {
 
-    private List<Funcionario> funcionarios = new ArrayList<>();
+    private final List<Funcionario> funcionarios = new ArrayList<>();
 
     @Override
     public List<Funcionario> findAll() {
@@ -16,8 +16,8 @@ public class FuncionarioRepository implements Repository {
     }
 
     @Override
-    public void save(Object dado) {
-        funcionarios.add((Funcionario) dado);
+    public void save(Funcionario dado) {
+        funcionarios.add(dado);
     }
 
 }

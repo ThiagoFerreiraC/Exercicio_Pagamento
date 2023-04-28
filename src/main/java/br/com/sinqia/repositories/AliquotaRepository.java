@@ -5,8 +5,8 @@ import br.com.sinqia.cargos.Aliquota;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AliquotaRepository implements Repository{
-    private List<Aliquota> aliquotas = new ArrayList<>();
+public class AliquotaRepository implements Repository<Aliquota>{
+    private final List<Aliquota> aliquotas = new ArrayList<>();
 
     @Override
     public List<Aliquota> findAll() {
@@ -14,7 +14,7 @@ public class AliquotaRepository implements Repository{
     }
 
     @Override
-    public void save(Object dado) {
-        aliquotas.add((Aliquota) dado);
+    public void save(Aliquota dado) {
+        aliquotas.add(dado);
     }
 }

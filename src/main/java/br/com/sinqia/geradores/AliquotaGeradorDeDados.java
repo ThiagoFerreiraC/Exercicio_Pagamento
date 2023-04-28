@@ -1,6 +1,5 @@
-package br.com.sinqia;
+package br.com.sinqia.geradores;
 
-import br.com.sinqia.GeradorDeDados;
 import br.com.sinqia.cargos.Aliquota;
 import br.com.sinqia.repositories.Repository;
 
@@ -9,9 +8,9 @@ import java.math.BigInteger;
 
 public class AliquotaGeradorDeDados implements GeradorDeDados {
 
-    private final Repository repository;
+    private final Repository<Aliquota> repository;
 
-    public AliquotaGeradorDeDados(Repository repository) {
+    public AliquotaGeradorDeDados(Repository<Aliquota> repository) {
         this.repository = repository;
     }
 
