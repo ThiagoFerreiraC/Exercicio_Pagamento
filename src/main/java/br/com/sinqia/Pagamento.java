@@ -18,6 +18,7 @@ public class Pagamento {
     public static void main(String[] args) {
         Pagamento pagamento = new Pagamento();
 
+
         //--------Funcionários -------
         Repository<Funcionario> funcionarioRepository = new FuncionarioRepository();
         pagamento.gerarDados(new FuncionarioGeradorDeDados(funcionarioRepository));
@@ -39,6 +40,7 @@ public class Pagamento {
         nomeESalarioProcessados.forEach(System.out::println);
     }
 
+
     public void gerarDados(GeradorDeDados geradorDeDados) {
         if (geradorDeDados == null) {
             throw new GeradorDeDadosNotFoundException("Gerador de dados não encontrado");
@@ -56,12 +58,12 @@ public class Pagamento {
     public CalculadoraIRRF gerarCalculadoraIRRF(List<Aliquota> aliquotas) {
         ValidadorAliquotas validadorAliquotas = new ValidarListaDeAliquotas();
         validadorAliquotas.validar(aliquotas);
-        return new CalculadoraIRRF(aliquotas, new ValidarValoresDasAliquotas());
+        return new CalculadoraIRRF(aliquotas, new ValidadorValoresDasAliquotas());
     }
 
     public ProcessarPagamento gerarProcessadorDePagamento(CalculadoraIRRF calculadoraIRRF) {
         if (calculadoraIRRF == null) {
-            throw new AliquotasNullException("Alíquotas não encontradas");
+            throw new CalculadoraIRRFNullException("Alíquotas não encontradas");
             //TODO Trocar Exception
         }
         return new ProcessarPagamento(calculadoraIRRF,

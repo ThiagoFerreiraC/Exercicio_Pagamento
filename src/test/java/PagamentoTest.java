@@ -56,6 +56,19 @@ public class PagamentoTest {
     }
 
     @Test
+    public void dadoCalculadoraIRRFNulaDeveGerarException() {
+        Assertions.assertThrowsExactly(CalculadoraIRRFNullException.class, () -> {
+            pagamento.gerarProcessadorDePagamento(null);
+        });
+    }
+    @Test
+    public void dadoRepositoryNuloDeveGerarException() {
+        Assertions.assertThrowsExactly(RepositoryNotFoundException.class, () -> {
+            pagamento.findAll(null);
+        });
+    }
+
+    @Test
     public void dadoFuncionarioGerarMapaNomeESalarioProcessadoComSucesso() {
         ProcessarPagamento processarPagamento = new ProcessarPagamento(calculadoraIRRF,
                 List.of(new ValidadorListaDeFuncionarios(),
