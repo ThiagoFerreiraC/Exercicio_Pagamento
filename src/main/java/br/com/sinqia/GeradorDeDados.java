@@ -1,4 +1,4 @@
-package br.com.sinqia.repositories;
+package br.com.sinqia;
 
 import java.util.List;
 

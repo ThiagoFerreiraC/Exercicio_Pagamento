@@ -7,13 +7,13 @@ import br.com.sinqia.repositories.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Pagamento {
 
     public static void main(String[] args) {
         Pagamento pagamento = new Pagamento();
+
 
         //--------Funcionários -------
         Repository<Funcionario> funcionarioRepository = new FuncionarioRepository();
@@ -29,7 +29,9 @@ public class Pagamento {
 
         Map<String, BigDecimal> nomeFuncionarioESalarioProcessadoMapa = pagamento.processarSalarioFuncionario(funcionarios, folhaDePagamento);
 
-        pagamento.imprimirNomeESalarioProcessadoFuncionario(nomeFuncionarioESalarioProcessadoMapa);
+        List<String> nomeESalarioProcessados = pagamento.gerarListaDeNomeESalarioProcessadoFuncionario(nomeFuncionarioESalarioProcessadoMapa);
+
+        nomeESalarioProcessados.forEach(System.out::println);
     }
 
 
@@ -46,7 +48,8 @@ public class Pagamento {
         }
         return repository.findAll();
     }
-    public  FolhaDePagamento gerarFolhaDePagamento(List<Aliquota> aliquotas) {
+
+    public FolhaDePagamento gerarFolhaDePagamento(List<Aliquota> aliquotas) {
         if (aliquotas == null || aliquotas.isEmpty()) {
             throw new AliquotasNullException("Alíquotas não encontradas");
         }
@@ -65,7 +68,6 @@ public class Pagamento {
         if (funcionarios.stream().anyMatch(funcionario ->
                 funcionario == null || funcionario.getNome() == null || funcionario.getNome().isBlank())) {
             throw new FuncionarioNotFoundException();
-            //TODO testes para funcionário = null, nome do funcionário = null, nome do funcionário = vazio
             //TODO passar todas as mensagens para dentro das exceptions
         }
 
@@ -77,12 +79,15 @@ public class Pagamento {
                 ));
     }
 
-    public  void imprimirNomeESalarioProcessadoFuncionario( Map<String, BigDecimal> nomeFuncionarioESalarioProcessadoMapa) {
-        nomeFuncionarioESalarioProcessadoMapa.forEach((key, value) ->
-                System.out.println(
-                key.toUpperCase()
-                + " = "
-                + value));
-        //TODO formatar a exibição do valor
+    public List<String> gerarListaDeNomeESalarioProcessadoFuncionario(Map<String, BigDecimal> nomeFuncionarioESalarioProcessadoMapa) {
+        return nomeFuncionarioESalarioProcessadoMapa
+                .entrySet()
+                .stream()
+                .map(mapa -> mapa.getKey().toUpperCase()
+                        + " = "
+                        + mapa.getValue())
+                .collect(Collectors.toList());
+        //TODO formatar a exibição do valor, trocar testes
+        //TODO test
     }
 }

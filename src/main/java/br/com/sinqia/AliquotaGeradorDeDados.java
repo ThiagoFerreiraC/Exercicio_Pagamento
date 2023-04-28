@@ -1,6 +1,8 @@
-package br.com.sinqia.repositories;
+package br.com.sinqia;
 
+import br.com.sinqia.GeradorDeDados;
 import br.com.sinqia.cargos.Aliquota;
+import br.com.sinqia.repositories.Repository;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
