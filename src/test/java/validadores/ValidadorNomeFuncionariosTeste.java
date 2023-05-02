@@ -14,20 +14,19 @@ import java.util.List;
 
 public class ValidadorNomeFuncionariosTeste {
 
-    private ValidadorFuncionarios validarFuncionarios;
+    private ValidadorFuncionarios validadorFuncionarios;
 
     @BeforeEach
     public void inicializar() {
-        this.validarFuncionarios = new ValidadorNomeFuncionarios();
+        this.validadorFuncionarios = new ValidadorNomeFuncionarios();
     }
-
 
     @Test
     public void dadoFuncionarioNomeNuloDeveGerarException() {
         List<Funcionario> funcionarios = List.of(new Desenvolvedor(null, new BigDecimal("5000")));
 
         Assertions.assertThrowsExactly(FuncionarioNotFoundException.class, () -> {
-            validarFuncionarios.validar(funcionarios);
+            validadorFuncionarios.validar(funcionarios);
         });
     }
 
@@ -36,7 +35,7 @@ public class ValidadorNomeFuncionariosTeste {
         List<Funcionario> funcionarios = List.of(new Desenvolvedor("", new BigDecimal("5000")));
 
         Assertions.assertThrowsExactly(FuncionarioNotFoundException.class, () -> {
-            validarFuncionarios.validar(funcionarios);
+            validadorFuncionarios.validar(funcionarios);
         });
     }
 

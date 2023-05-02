@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ValidadorListaDeFuncionariosTeste {
     private ValidadorFuncionarios validarFuncionarios;
@@ -28,9 +27,8 @@ public class ValidadorListaDeFuncionariosTeste {
 
     @Test
     public void dadoListaDeFuncionariosVaziaDeveGerarException() {
-        List<Funcionario> funcionarios = new ArrayList<>();
         Assertions.assertThrowsExactly(FuncionariosNullException.class, () -> {
-            validarFuncionarios.validar(funcionarios);
+            validarFuncionarios.validar(new ArrayList<>());
         });
     }
 

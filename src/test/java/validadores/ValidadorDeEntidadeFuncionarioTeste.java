@@ -1,19 +1,16 @@
 package validadores;
 
-import br.com.sinqia.cargos.Desenvolvedor;
 import br.com.sinqia.cargos.Funcionario;
 import br.com.sinqia.exceptions.FuncionarioNotFoundException;
-import br.com.sinqia.repositories.AliquotaRepository;
-import br.com.sinqia.repositories.FuncionarioRepository;
 import br.com.sinqia.validadores.ValidadorFuncionarios;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ValidadorDeEntidadeFuncionario {
+public class ValidadorDeEntidadeFuncionarioTeste {
 
     private ValidadorFuncionarios validarFuncionarios;
 
@@ -24,9 +21,8 @@ public class ValidadorDeEntidadeFuncionario {
 
     @Test
     public void dadoFuncionarioNuloDeveGerarException() {
-        FuncionarioRepository repository = new FuncionarioRepository();
-        repository.save(null);
-        List<Funcionario> funcionarios = repository.findAll();
+        List<Funcionario> funcionarios = new ArrayList<>();
+        funcionarios.add(null);
         Assertions.assertThrowsExactly(FuncionarioNotFoundException.class, () -> {validarFuncionarios.validar(funcionarios);
         });
     }

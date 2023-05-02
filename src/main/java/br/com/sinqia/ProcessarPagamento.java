@@ -1,8 +1,6 @@
 package br.com.sinqia;
 
 import br.com.sinqia.cargos.Funcionario;
-import br.com.sinqia.exceptions.*;
-import br.com.sinqia.validadores.Validador;
 import br.com.sinqia.validadores.ValidadorFuncionarios;
 
 import java.math.BigDecimal;
@@ -32,7 +30,7 @@ public class ProcessarPagamento {
                         this::descontarImpostoDoSalario
                 ));
     }
-    public BigDecimal descontarImpostoDoSalario(Funcionario funcionario) {
+    private BigDecimal descontarImpostoDoSalario(Funcionario funcionario) {
         BigDecimal salario = funcionario.getSalario();
         BigDecimal imposto = calculadoraIRRF.calcularImposto(salario);
         return salario.subtract(imposto).setScale(2, RoundingMode.CEILING);

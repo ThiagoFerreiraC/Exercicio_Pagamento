@@ -4,6 +4,7 @@ import br.com.sinqia.cargos.Aliquota;
 import br.com.sinqia.validadores.ValidadorAliquotas;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.List;
 
@@ -19,10 +20,11 @@ public class CalculadoraIRRF {
     public BigDecimal calcularImposto(BigDecimal salario) {
         Aliquota aliquotaParaSalario = pegarAliquotaCorrespondente(salario);
         BigDecimal impostoTotal = aliquotaParaSalario.getTaxaIRRF().multiply(salario);
-        return impostoTotal.subtract(aliquotaParaSalario.getDesconto());
+        return impostoTotal.subtract(aliquotaParaSalario.getDesconto()).setScale(2, RoundingMode.CEILING);
     }
 
     private Aliquota pegarAliquotaCorrespondente(BigDecimal salario) {
+        //TODO testar para ver se retorna a alíquota correta para o salário certo
         validadorValoresDasAliquotas.validar(aliquotas);
         return aliquotas.stream()
                 .filter(aliquota -> salario.compareTo(aliquota.getLimiteInferior()) > 0)

@@ -13,29 +13,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Pagamento {
+public class PagamentoApplication {
 
     public static void main(String[] args) {
-        Pagamento pagamento = new Pagamento();
-
+        PagamentoApplication pagamentoApplication = new PagamentoApplication();
 
         //--------Funcionários -------
         Repository<Funcionario> funcionarioRepository = new FuncionarioRepository();
-        pagamento.gerarDados(new FuncionarioGeradorDeDados(funcionarioRepository));
-        List<Funcionario> funcionarios = pagamento.findAll(funcionarioRepository);
+        pagamentoApplication.gerarDados(new FuncionarioGeradorDeDados(funcionarioRepository));
+        List<Funcionario> funcionarios = pagamentoApplication.findAll(funcionarioRepository);
 
         //--------Alíquotas
         Repository<Aliquota> aliquotaRepository = new AliquotaRepository();
-        pagamento.gerarDados(new AliquotaGeradorDeDados(aliquotaRepository));
-        List<Aliquota> aliquotas = pagamento.findAll(aliquotaRepository);
+        pagamentoApplication.gerarDados(new AliquotaGeradorDeDados(aliquotaRepository));
+        List<Aliquota> aliquotas = pagamentoApplication.findAll(aliquotaRepository);
 
-        CalculadoraIRRF calculadoraIRRF = pagamento.gerarCalculadoraIRRF(aliquotas);
+        CalculadoraIRRF calculadoraIRRF = pagamentoApplication.gerarCalculadoraIRRF(aliquotas);
 
-        ProcessarPagamento processarPagamento = pagamento.gerarProcessadorDePagamento(calculadoraIRRF);
+        ProcessarPagamento processarPagamento = pagamentoApplication.gerarProcessadorDePagamento(calculadoraIRRF);
 
         Map<String, BigDecimal> nomeFuncionarioESalarioProcessadoMapa = processarPagamento.processarSalarioFuncionario(funcionarios);
 
-        List<String> nomeESalarioProcessados = pagamento.gerarListaDeNomeESalarioProcessadoFuncionario(nomeFuncionarioESalarioProcessadoMapa);
+        List<String> nomeESalarioProcessados = pagamentoApplication.gerarListaDeNomeESalarioProcessadoFuncionario(nomeFuncionarioESalarioProcessadoMapa);
 
         nomeESalarioProcessados.forEach(System.out::println);
     }
