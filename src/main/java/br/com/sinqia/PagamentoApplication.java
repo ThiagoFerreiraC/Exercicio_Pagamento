@@ -63,7 +63,6 @@ public class PagamentoApplication {
     public ProcessarPagamento gerarProcessadorDePagamento(CalculadoraIRRF calculadoraIRRF) {
         if (calculadoraIRRF == null) {
             throw new CalculadoraIRRFNullException("Alíquotas não encontradas");
-            //TODO Trocar Exception
         }
         return new ProcessarPagamento(calculadoraIRRF,
                 List.of(new ValidadorListaDeFuncionarios(),

@@ -24,7 +24,6 @@ public class CalculadoraIRRF {
     }
 
     private Aliquota pegarAliquotaCorrespondente(BigDecimal salario) {
-        //TODO testar para ver se retorna a alíquota correta para o salário certo
         validadorValoresDasAliquotas.validar(aliquotas);
         return aliquotas.stream()
                 .filter(aliquota -> salario.compareTo(aliquota.getLimiteInferior()) > 0)
